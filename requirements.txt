@@ -1,4 +1,7 @@
-flask
-yfinance
+numpy
 pandas
-git 
+statsmodels
+matplotlib
+scikit-learn
+pmdarima
+yfinance
