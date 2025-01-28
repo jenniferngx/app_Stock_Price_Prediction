@@ -3,7 +3,7 @@ import pandas as pd
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import itertools
-from statsmodels.tsa.stattools import adfuller, acf, pacf
+from statsmodels.tsa.stattools import adfuller
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import TimeSeriesSplit
 import pmdarima as pm
@@ -16,7 +16,7 @@ warnings.filterwarnings("ignore")
 def forecast_ARIMA(data, col, steps):
     train = data[col].values
 
-    (p,d,q) = find_params(data, col="Close", P=range(0,11), D=range(0,3), Q=(0,11))
+    (p,d,q) = find_params_ARIMA(data, col="Close", P=range(0,11), D=range(0,3), Q=(0,11))
 
     print("Fitting ARIMA model...")
     model = sm.tsa.arima.ARIMA(train, order=(p,d,q)).fit()
@@ -45,7 +45,7 @@ def forecast_ARIMA(data, col, steps):
 
 def fit_ARIMA(data, col):
     x = data[col].values
-    (p,d,q) = find_params(data, col="Close", P=range(0,11), D=range(0,3), Q=(0,11))
+    (p,d,q) = find_params_ARIMA(data, col="Close", P=range(0,11), D=range(0,3), Q=(0,11))
 
     test_size = int(len(x) * 0.2)
     train = x[:-test_size]
@@ -81,7 +81,7 @@ def evaluate_arima(data, col, p, d, q):
     rmse = np.sqrt(mean_squared_error(test,pred))
     return rmse
 
-def find_params(data, col, P, D, Q):
+def find_params_ARIMA(data, col, P, D, Q):
     best_rmse = np.inf
     best_params = None
     if is_stationary(data[col].values):
