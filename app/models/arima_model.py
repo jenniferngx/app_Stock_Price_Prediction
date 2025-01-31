@@ -6,11 +6,8 @@ import itertools
 from statsmodels.tsa.stattools import adfuller
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import TimeSeriesSplit
-import pmdarima as pm
-from pmdarima.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import warnings
-from pmdarima.arima.utils import ndiffs
 warnings.filterwarnings("ignore")
 
 def forecast_ARIMA(data, col, steps):
@@ -29,7 +26,6 @@ def forecast_ARIMA(data, col, steps):
     train_dates = dates[:len(train)] 
     last_date = train_dates.iloc[-1]
     future_dates = pd.date_range(start=last_date + pd.Timedelta(days=1), periods=steps, freq='D')
-    print(future_dates)
     
     # Plotting predictions
     plt.figure(figsize = (10,8))
@@ -64,13 +60,14 @@ def fit_ARIMA(data, col):
     plt.plot(train_pred, color = 'b', label = 'predict')
     plt.plot(x, color = 'r', label = 'real')
     plt.plot(train, label = 'train', color = 'k')
-    plt.title("ARIMA model")
+    plt.title("ARIMA Model - Predictions vs Actual Prices")
     plt.legend()
-    plt.savefig("plots/arima.png")
+    plt.savefig("plots/arima_model.png")
     plt.close()
 
     # rmse
     print("The rmse value is:", round(np.sqrt(mean_squared_error(pred,test)),0))
+    return np.sqrt(mean_squared_error(pred,test))
 
 
 def evaluate_arima(data, col, p, d, q):
@@ -111,11 +108,13 @@ def is_stationary(series):
 def main(): # For testing purpose
     data = pd.read_csv("data/apple_stock_data.csv")
 
-    print("\nTesting forecast_ARIMA function...")
-    forecast_ARIMA(data, col="Close", steps = 7)
+    print("\nTesting fit_ARIMA function...") 
+    fit_ARIMA(data, col="Close")
 
-    #print("\nTesting fit_ARIMA function...") 
-    #fit_ARIMA(data, col="Close")
+    #print("\nTesting forecast_ARIMA function...")
+    #forecast_ARIMA(data, col="Close", steps = 7)
+
+
 
 main()
 

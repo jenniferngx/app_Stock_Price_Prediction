@@ -16,7 +16,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def fit_LSTM(data, col, window, lstm_unit, epoch):
     # Extract target column and scale data
-    y = data[col].values
+    y = data[col].values.reshape(-1,1)
     scaler = MinMaxScaler(feature_range=(0,1))
     y_scaled = scaler.fit_transform(y)
     train_size = int(len(data) *0.8)
@@ -31,10 +31,10 @@ def fit_LSTM(data, col, window, lstm_unit, epoch):
     x_train = x_train.reshape(x_train.shape[0], x_train.shape[1], 1)
 
     # Create testing data
-    x_test, y_test = [], data[col].values[train_size:,:]
+    x_test, y_test = [], []
     for j in range(window, len(test)):
         x_test.append(test[j -window:j, 0])
-        #y_test.append(test[j, 0])
+        y_test.append(test[j, 0])
     x_test, y_test = np.array(x_test), np.array(y_test)
     x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], 1)
 
@@ -50,21 +50,19 @@ def fit_LSTM(data, col, window, lstm_unit, epoch):
     # Make predictions and inverse scale
     predictions = model.predict(x_test)
     predictions = scaler.inverse_transform(predictions)
-    training = y[:train_size]
-    test = y[train_size:]
-    train_pred = np.concatenate((training,predictions), axis=None)    #y_test = scaler.inverse_transform(y_test.reshape(-1, 1))
-    #train_plot = scaler.inverse_transform(train)
+    y_test = scaler.inverse_transform(y_test.reshape(-1, 1))
+    train_plot = scaler.inverse_transform(train)
     
     # Calculate MSE
     MSE = mean_squared_error(y_test, predictions)
     print("The rmse value is:", {float(np.sqrt(MSE))})
 
-    # Plot train data, test data, and predictions
+    # Plotting
     plt.figure(figsize = (16,8))
-    plt.plot(train_pred, label = 'predict', color = 'b')
-    plt.plot(y, label = 'true', color = 'r')
-    plt.plot(training, label ='train', color = 'k')
-    plt.title('LSTM Model - Training vs Testing vs Predictions')
+    plt.plot(data.index[:train_size], train_plot, label = 'train', color = 'b')
+    plt.plot(data.index[train_size:], y_test.flatten(), label = 'true', color = 'r')
+    plt.plot(data.index[train_size:], predictions.flatten(), label ='predict', color = 'k')
+    plt.title('LSTM Model - Predictions vs Actual Prices')
     plt.xlabel('Time')
     plt.ylabel('Price')
     plt.legend()

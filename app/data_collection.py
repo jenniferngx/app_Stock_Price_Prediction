@@ -21,6 +21,6 @@ def fetch_stock_data(ticker:str, start_date:str, end_date:str) -> pd.DataFrame:
         return pd.DataFrame()
 
 if __name__ == "__main__": #Test function for data collection
-    stock_data = fetch_stock_data("AAPL", "2021-01-01", "2021-06-31")
+    stock_data = fetch_stock_data("AAPL", "2021-01-01", "2021-12-31")
     stock_data.to_csv("data/apple_stock_data.csv", index=False)
     print("Data saved to apple_stock_data.csv")
