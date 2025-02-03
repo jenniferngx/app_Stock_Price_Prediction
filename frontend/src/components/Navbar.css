@@ -1,0 +1,29 @@
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    color: #32302f;
+    padding: 0.5rem 1rem;
+    height: 60px;
+    box-shadow : 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+.logo{
+    font-size: 1.5rem;
+    font-weight:  bold;
+}
+.stockSearchBox{
+    display: flex;
+    align-items: center;
+}
+.stockSearchInput{
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #32302f;
+    outline: none;
+    font-size: 1rem;
+    width: 200px;
+}
+.stockSearchInput:focus{
+    border-color: #32302f;
+}
