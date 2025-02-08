@@ -1,0 +1,41 @@
+.homepage-container{
+    position: relative;
+    width: 100vw;
+    height: 80vh;
+    overflow: hidden;
+}
+
+.background-gif{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 80vh;
+    object-fit: fill;
+    z-index: 0;
+}
+
+.text-overlay{
+    position: relative;
+    z-index: 10;
+    color: #32302f;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding-left: 3rem;
+}
+
+.text-overlay h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 4rem; 
+    line-height: 1.2;
+    margin: 1rem 0;
+    text-align: left; 
+}
+
+.text-overlay p {
+    font-family: Arial, sans-serif;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+}

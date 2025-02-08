@@ -1,17 +1,21 @@
 import React from 'react'
 import './Navbar.css'
+import {Link, useNavigate} from 'react-router-dom'
+
 const Navbar = ({ onSearch }) => {
+    const navigate = useNavigate();
+    
     return (
         <div className = "navbar">
-            <div className = "logo">TradeSight</div>
+            <Link to ="/" className = "logo">TradeSight</Link>
             <div className = "stockSearchBox">
-                <input 
-                    type = "text"
+                <input type = "text" className = "stockSearchInput" 
                     placeholder= "Search stock ticker"
-                    className = "stockSearchInput"
                     onKeyDown={(e)=> {
                         if (e.key === 'Enter'){
-                            onSearch(e.target.value)
+                            const ticker = e.target.value.trim()
+                            onSearch(ticker);
+                            navigate(`/${ticker}`);
                         }
                     }}
                 />

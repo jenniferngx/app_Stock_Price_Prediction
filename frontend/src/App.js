@@ -1,40 +1,47 @@
 import './App.css';
-import React, {useState} from 'react'
+import React, {useState} from 'react';
+import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import LineChart from './components/LineChart';
 import PredictionForm from './components/PredictionForm';
+import PredictionResult from './components/PredictionResult'
+import Home from './pages/HomePage';
+
+const StockDetails = ({onSubmit, predictions}) => {
+  let {ticker} = useParams();
+
+  return (
+    <div className='main-container'>
+      <div className='chart-container'>
+        <LineChart ticker={ticker} prediction={predictions}/>
+      </div> 
+      <div className='form-container'>
+        <PredictionForm ticker={ticker} onSubmit={onSubmit}/>
+        <PredictionResult predictions = {predictions}/>
+      </div>
+    </div>
+  );
+};
 
 function App() {
   const [ticker, setTicker] = useState('');
-  const [predictionParams, setPredictionParams] = useState(null);
+  const [predictions, setPredictions] = useState([]);
 
-  const handleSearch = (ticker) => {
-    setTicker(ticker)
-  };
+  const handleSearch = (ticker) => {setTicker(ticker)};
 
-  const handlePredictionSubmit = (params) => {
-    setPredictionParams(params);
+  const handlePredictionSubmit = (predictedData) => {
+    console.log("Updating predictions in state:", predictedData);
+    setPredictions(predictedData);
   };
 
   return (
-    <div>
+    <Router>
       <Navbar onSearch={handleSearch}/>
-      {ticker ?(
-        <div className='main-container'>
-          <div className='chart-container'>
-            <LineChart ticker={ticker}/>
-          </div> 
-          <div className='form-container'>
-            <PredictionForm ticker={ticker} onSubmit={handlePredictionSubmit}/>
-          </div>
-        </div>
-      ): (
-        <div className = "welcome">
-        <h1>Welcome to TradeSight</h1>
-        <p>Start by searching for a stock ticker in the search box.</p>
-      </div>
-      )}
-    </div>
+      <Routes>
+        <Route path='/' element={<Home onSearch={handleSearch}/>}/>
+        <Route path='/:ticker' element={<StockDetails onSubmit={handlePredictionSubmit} predictions={predictions} />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -35,7 +35,7 @@ def forecast_ARIMA(data, col, steps):
     plt.xlabel("Date")
     plt.ylabel("Price")
     plt.legend()
-    plt.savefig("plots/arima_forecast.png")
+    #plt.savefig("plots/arima_forecast.png")
     plt.close()
 
 
@@ -62,7 +62,7 @@ def fit_ARIMA(data, col):
     plt.plot(train, label = 'train', color = 'k')
     plt.title("ARIMA Model - Predictions vs Actual Prices")
     plt.legend()
-    plt.savefig("plots/arima_model.png")
+    #plt.savefig("plots/arima_model.png")
     plt.close()
 
     # rmse
@@ -105,18 +105,16 @@ def is_stationary(series):
         return False # Series is non-stationary -> needs differencing
 
 
-def main(): # For testing purpose
-    data = pd.read_csv("backend/data/AAPL_20210101_20211231.csv")
 
-    print("\nTesting fit_ARIMA function...") 
-    fit_ARIMA(data, col="Close")
+data = pd.read_csv("data/AAPL_20210101_20211231.csv")
 
-    #print("\nTesting forecast_ARIMA function...")
-    #forecast_ARIMA(data, col="Close", steps = 7)
+#print("\nTesting fit_ARIMA function...") 
+#fit_ARIMA(data, col="Close")
+
+#print("\nTesting forecast_ARIMA function...")
+#forecast_ARIMA(data, col="Close", steps = 7)
 
 
-
-main()
 
 """
 def cv_ARIMA(data, col, p, d, q, k=5):

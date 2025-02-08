@@ -19,8 +19,11 @@ def fit_LSTM(data, col, window, lstm_unit, epoch):
     y = data[col].values.reshape(-1,1)
     scaler = MinMaxScaler(feature_range=(0,1))
     y_scaled = scaler.fit_transform(y)
+    print("✅ Data normalized and scaled.")
+
     train_size = int(len(data) *0.8)
     train, test = y_scaled[:train_size], y_scaled[train_size - window:]
+    print(f"📈 Train size: {len(train)}, Test size: {len(test)}")
 
     # Create training data
     x_train, y_train = [], []
@@ -29,6 +32,7 @@ def fit_LSTM(data, col, window, lstm_unit, epoch):
         y_train.append(train[i,0])
     x_train, y_train = np.array(x_train), np.array(y_train)
     x_train = x_train.reshape(x_train.shape[0], x_train.shape[1], 1)
+    print(f"✅ Training data prepared: {x_train.shape}")
 
     # Create testing data
     x_test, y_test = [], []
@@ -37,17 +41,21 @@ def fit_LSTM(data, col, window, lstm_unit, epoch):
         y_test.append(test[j, 0])
     x_test, y_test = np.array(x_test), np.array(y_test)
     x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], 1)
+    print(f"✅ Testing data prepared: {x_test.shape}")
 
     # Define the LSTM model
+    print("🚀 Compiling LSTM model...")
     model = Sequential()
     model.add(LSTM(lstm_unit, return_sequences=True, input_shape=(x_train.shape[1], 1)))
     model.add(LSTM(130, return_sequences=False))
     model.add(Dense(100))
     model.add(Dense(1))
     model.compile(optimizer = 'adam', loss='mean_squared_error')
+    print("🚀 Training model...")
     model.fit(x_train, y_train, batch_size=128, epochs=epoch, verbose=0)
 
     # Make predictions and inverse scale
+    print("✅ Model training complete. Making predictions...")
     predictions = model.predict(x_test)
     predictions = scaler.inverse_transform(predictions)
     y_test = scaler.inverse_transform(y_test.reshape(-1, 1))
@@ -57,6 +65,8 @@ def fit_LSTM(data, col, window, lstm_unit, epoch):
     MSE = mean_squared_error(y_test, predictions)
     print("The rmse value is:", {float(np.sqrt(MSE))})
 
+    
+    """
     # Plotting
     plt.figure(figsize = (16,8))
     plt.plot(data.index[:train_size], train_plot, label = 'train', color = 'b')
@@ -68,6 +78,8 @@ def fit_LSTM(data, col, window, lstm_unit, epoch):
     plt.legend()
     plt.savefig("plots/lstm_model.png")
     plt.close()
+    """
+    return predictions.flatten()
 
 def evaluate_LSTM(data, col, window, l, e):
     # Extract, scale data & split into train and test sets
