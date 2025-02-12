@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 
 const PredictionResult = ({predictions = []}) => {
     console.log("🟢 Rendering PredictionResult with predictions:", predictions);

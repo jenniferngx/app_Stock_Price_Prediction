@@ -1,0 +1,17 @@
+.prediction-page {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 20px;
+}
+  
+.chart-container {
+    flex: 2;
+    margin-right: 20px;
+}
+  
+.table-container {
+    flex: 1;    
+}
+  
